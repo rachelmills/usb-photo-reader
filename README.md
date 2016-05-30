@@ -1,3 +1,5 @@
+# usb-photo-reader
+Application to read photos from one or more usb sticks and find and/or delete duplicates
 Spring Boot and Thymeleaf with Maven
 ====================================
 
@@ -11,7 +13,7 @@ Spring Boot and Thymeleaf with Maven
 Prerequisites
 -------------
 
-- JDK 8 and JAVA_HOME environment variable set 
+- JDK 8 and JAVA_HOME environment variable set
 
 Building the project
 --------------------
