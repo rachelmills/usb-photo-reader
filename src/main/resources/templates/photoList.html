@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Rachel's photo application</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.6/css/bootstrap.min.css}"
+          rel="stylesheet" media="screen"/>
+    <link href="../static/css/core.css"
+          th:href="@{/css/core.css}"
+          rel="stylesheet" media="screen"/>
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.1/jquery.min.js"
+            th:src="@{/webjars/jquery/2.2.1/jquery.min.js}"></script>
+</head>
+<body>
+<!-- Header -->
+<div th:replace="fragments/header :: header">
+    <!-- ============================================================================ -->
+    <!-- This content is only used for static prototyping purposes (natural templates)-->
+    <!-- and is therefore entirely optional, as this markup fragment will be included -->
+    <!-- from "fragments/header.html" at runtime.                                     -->
+    <!-- ============================================================================ -->
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Static header</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="hero-unit">
+        <h1>Photos</h1>
+        <p>
+            Welcome to the Photo Application. The time is: <strong
+                th:text="${#temporals.format(now, 'dd/MMM/yyyy HH:mm')}">31/12/2015 15:00</strong>
+        </p>
+    </div>
+    <div>
+        <div class="col-md-12 text-center">
+            <div class="pagination pagination-centered">
+                <ul class="pagination">
+                    <li th:class="${currentIndex == 1} ? 'disabled' : ''">
+                        <span th:if="${currentIndex == 1}">First</span>
+                        <a th:if="${currentIndex != 1}" th:href="@{/photos/page/1}">First</a>
+                    </li>
+                    <li th:class="${currentIndex != 1} ? '' : 'disabled'">
+                        <span th:if="${currentIndex == 1}" class="glyphicon glyphicon-backward"></span>
+                        <a th:if="${currentIndex != 1}" th:href="@{|${baseUrl}${currentIndex - 1} | }"
+                           title="Go to previous page"
+                           class="glyphicon glyphicon-backward"></a>
+                    </li>
+                    <li th:each="item : ${#numbers.sequence(beginIndex, endIndex)}"
+                            th:class="${item == currentIndex ? 'active' : ''}">
+                        <span th:if="${item == currentIndex}" th:text="${item}">1</span>
+                        <a th:if="${item != currentIndex}" th:href="@{|${baseUrl}${item}|}">
+                            <span th:text="${item}">1</span>
+                        </a>
+                    </li>
+                    <li th:class="${currentIndex != totalPageCount} ? '' : disabled">
+                        <span th:if="${currentIndex == totalPageCount}" class="glyphicon glyphicon-forward"></span>
+                        <a th:if="${currentIndex != totalPageCount}" th:href="@{|${baseUrl}${currentIndex + 1}|}"
+                           title="Go to next page"
+                           class="glyphicon glyphicon-forward"></a>
+                    </li>
+                    <li th:class="${currentIndex == totalPageCount} ? 'disabled' : ''">
+                        <span th:if="${currentIndex == totalPageCount}">Last</span>
+                        <a th:if="${currentIndex != totalPageCount}" th:href="@{|${baseUrl}${totalPageCount}|}">Last</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>USB Name</th>
+            <th>Photo Name</th>
+            <th>Created Date</th>
+            <th>Photo Size</th>
+            <th>Possible Duplicate</th>
+            <th>File Path</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="photo : ${photos.pageList}" th:style="${photo.duplicate} ? 'background:#2E9AFE; color:#FFFFFF'">
+            <td th:text="${photo.usbName}"></td>
+            <td th:text="${photo.photoName}"></td>
+            <td th:text="${photo.date}"></td>
+            <td th:text="${photo.size}"></td>
+            <td th:text="${photo.duplicate}"></td>
+            <td th:text="${photo.filePath}"></td>
+            <td style="max-width:100px; max-length:100px;"><a th:href="@{/openfile(file=${photo.filePath.toString()})}"
+                                                              target="_blank"><img class="img-responsive img-thumbnail"
+                                                                                   th:src="@{/openfile(file=${photo.filePath.toString()})}"></img></a>
+            </td>
+            <td><a th:href="@{/deletefile(file=${photo.filePath.toString()})}"><span class="glyphicon glyphicon-remove"
+                                                                                     aria-hidden="true"></span></a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <footer>
+        <div th:replace="fragments/footer :: footer">&copy; 2016 Rachel's photo helper</div>
+    </footer>
+</div>
+</body>
+</html>
+
+
